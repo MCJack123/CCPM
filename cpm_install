@@ -1,0 +1,12 @@
+print "Checking database..."
+local database = http.get("http://cppconsole.bruienne.com/CCPM/database.txt")
+packID = 0
+while lastId = database.readLine() != "ids" do
+if lastId == arg[1] then found = true
+else found = false end
+packID = packID + 1
+end
+if found != true then error("Package " .. arg[1] .. " not found.") end
+print "Downloading package..."
+package = http.get("http://cppconsole.bruienne.com/CCPM/packs/ids/" .. packID .. ".ccp")
+

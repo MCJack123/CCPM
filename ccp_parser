@@ -1,0 +1,25 @@
+--Enabled for verbose mode
+_DEBUG = false
+
+function inArray(array, str)
+  for _,v in pairs(array) do
+    if v == str then
+      return true
+    end
+  end
+  return false
+end
+
+function debugPrint(text)
+  if _DEBUG then print(text) end
+end 
+--Uncomment to allow -v argument
+--if inArray(arg, "-v") then _DEBUG = true end
+function ccpload(file)
+  local ccp = fs.open(file, "r")
+  local data = ccp.readAll()
+  ccp.close()
+  return textutils.unserialize(data)
+end
+
+function ccppack
