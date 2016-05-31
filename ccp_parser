@@ -15,11 +15,24 @@ function debugPrint(text)
 end 
 --Uncomment to allow -v argument
 --if inArray(arg, "-v") then _DEBUG = true end
-function ccpload(file)
+function ccp_load(file)
   local ccp = fs.open(file, "r")
   local data = ccp.readAll()
   ccp.close()
   return textutils.unserialize(data)
 end
+                                    
+function ccp_pack(name, table)
+  local file = fs.open(name, "w")
+  file.write(textutils.serialize(table)
+  file.close()
+end
 
-function ccppack
+function ccp_add_folder(table, name, folder1="", folder2="", folder3="", folder4="", folder5="")
+  
+  if folder1 != "" then
+    if folder2 != "" then
+      if folder3 != "" then
+        if folder4 != "" then
+          if folder5 != "" then
+            
