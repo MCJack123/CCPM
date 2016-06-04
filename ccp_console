@@ -1,0 +1,15 @@
+os.loadAPI("/~/CCPM/ccp")
+text = ""
+textutils.slowPrint("This program was designed for testing the CCP parser.")
+while text != "quit" do
+  print("> ")
+  text = read()
+  if text == "create" then
+    print("Enter the name: ")
+    theCCP = ccp.new(read())
+  elseif text == "pack" then
+    print("Enter the output file: ")
+    ccp.pack(theCCP, read())
+  elseif text == "load" then
+    print("Enter the input file: ")
+    theCCP = ccp.load(read())
