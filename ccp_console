@@ -1,15 +1,43 @@
-os.loadAPI("/~/CCPM/ccp")
+loadres = os.loadAPI("/~/CCPM/ccp")
+if loadres ~= true then print("Load failed.") end
 text = ""
-textutils.slowPrint("This program was designed for testing the CCP parser.")
-while text != "quit" do
-  print("> ")
+dirs = {}
+textutils.slowPrint("This program was designed for testing the CCP parser. Type help for help.", 25)
+while text ~= "quit" do
+  write("> ")
   text = read()
   if text == "create" then
-    print("Enter the name: ")
+    write("Enter the name: ")
     theCCP = ccp.new(read())
   elseif text == "pack" then
-    print("Enter the output file: ")
-    ccp.pack(theCCP, read())
+    write("Enter the output file: ")
+    ccp.pack(read(), theCCP)
   elseif text == "load" then
-    print("Enter the input file: ")
+    write("Enter the input file: ")
     theCCP = ccp.load(read())
+  elseif text == "cd" then
+    write("Enter the directory: ")
+    table.insert(dirs, read())
+  elseif text == "print" then
+    print(theCCP.serialize())
+  elseif text == "newfile" then
+    write("Enter the file name: ")
+    name = read()
+    write("Enter the file contents: ")
+    theCCP = ccp.edit_file(theCCP, name, read(), dirs[0], dirs[1], dirs[2], dirs[3], dirs[4])
+  elseif text == "newfol" then
+    write("Enter the folder name: ")
+    theCCP = ccp.new_folder(theCCP, read(), dirs[0], dirs[1], dirs[2], dirs[3])
+  elseif text == "extract" then
+    write("Enter the folder to extract to: ")
+    target = read()
+    write("Would you like to create a new folder inside? (y/n) ")
+    newfol = read()
+    if newfol == "y" then
+      ccp.extract(theCCP, target, true)
+    else
+      ccp.extract(theCCP, target, false)
+    end
+  elseif text == "help" then
+    print("Commands:\ncreate: Create a new instance.\nload: Load a .ccp file.\npack: Pack the current instance into a .cpp.\n")
+end
