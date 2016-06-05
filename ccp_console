@@ -2,6 +2,7 @@ loadres = os.loadAPI("/~/CCPM/ccp")
 if loadres ~= true then print("Load failed.") end
 text = ""
 dirs = {}
+theCCP = {}
 textutils.slowPrint("This program was designed for testing the CCP parser. Type help for help.", 25)
 while text ~= "quit" do
   write("> ")
@@ -19,7 +20,7 @@ while text ~= "quit" do
     write("Enter the directory: ")
     table.insert(dirs, read())
   elseif text == "print" then
-    print(theCCP.serialize())
+    print(textutils.serialize(theCCP))
   elseif text == "newfile" then
     write("Enter the file name: ")
     name = read()
@@ -27,7 +28,7 @@ while text ~= "quit" do
     theCCP = ccp.edit_file(theCCP, name, read(), dirs[0], dirs[1], dirs[2], dirs[3], dirs[4])
   elseif text == "newfol" then
     write("Enter the folder name: ")
-    theCCP = ccp.new_folder(theCCP, read(), dirs[0], dirs[1], dirs[2], dirs[3])
+    theCCP = ccp.add_folder(theCCP, read(), dirs[0], dirs[1], dirs[2], dirs[3])
   elseif text == "extract" then
     write("Enter the folder to extract to: ")
     target = read()
@@ -39,5 +40,10 @@ while text ~= "quit" do
       ccp.extract(theCCP, target, false)
     end
   elseif text == "help" then
-    print("Commands:\ncreate: Create a new instance.\nload: Load a .ccp file.\npack: Pack the current instance into a .cpp.\n")
+    print("Commands:\ncreate: Create a new instance.\nload: Load a .ccp file.\npack: Pack the current instance into a .cpp.\ncd: Change your directory.\nprint: Echo the current instance.\nnewfile: Create/edit a file.\nnewfol: Create/clear a folder.\nextract: Extract the files in the current instance.")
+  elseif text == "quit" then
+    print("Goodbye! [Process Completed]")
+  else
+    print("Unknown command. Type help for help.")
+  end
 end
