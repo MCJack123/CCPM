@@ -1,4 +1,0 @@
-local table = {name="Table",data={sample1="Sample"}}
-local file = fs.open("table.txt", "w")
-file.write(textutils.serialize(table))
-file.close()

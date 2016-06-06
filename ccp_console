@@ -1,7 +1,10 @@
 loadres = os.loadAPI("/~/CCPM/ccp")
-if loadres ~= true then print("Load failed.") end
+if loadres == true then
 text = ""
 dirs = {}
+for i=0, 4 do
+  dirs[i] = nil
+end
 theCCP = {}
 textutils.slowPrint("This program was designed for testing the CCP parser. Type help for help.", 25)
 while text ~= "quit" do
@@ -18,21 +21,26 @@ while text ~= "quit" do
     theCCP = ccp.load(read())
   elseif text == "cd" then
     write("Enter the directory: ")
-    table.insert(dirs, read())
+    local dir_read = read()
+    if dir_read == ".." then
+      table.remove(dirs)
+    else
+      table.insert(dirs, dir_read)
+    end
   elseif text == "print" then
     print(textutils.serialize(theCCP))
   elseif text == "newfile" then
     write("Enter the file name: ")
     name = read()
     write("Enter the file contents: ")
-    theCCP = ccp.edit_file(theCCP, name, read(), dirs[0], dirs[1], dirs[2], dirs[3], dirs[4])
+    theCCP = ccp.edit_file(theCCP, name, read(), dirs[1], dirs[2], dirs[3], dirs[4], dirs[5])
   elseif text == "newfol" then
     write("Enter the folder name: ")
-    theCCP = ccp.add_folder(theCCP, read(), dirs[0], dirs[1], dirs[2], dirs[3])
+    theCCP = ccp.add_folder(theCCP, read(), dirs[1], dirs[2], dirs[3], dirs[4])
   elseif text == "extract" then
     write("Enter the folder to extract to: ")
     target = read()
-    write("Would you like to create a new folder inside? (y/n) ")
+    write("Would you like to create a new folder inside the folder inputted? (y/n) ")
     newfol = read()
     if newfol == "y" then
       ccp.extract(theCCP, target, true)
@@ -43,7 +51,21 @@ while text ~= "quit" do
     print("Commands:\ncreate: Create a new instance.\nload: Load a .ccp file.\npack: Pack the current instance into a .cpp.\ncd: Change your directory.\nprint: Echo the current instance.\nnewfile: Create/edit a file.\nnewfol: Create/clear a folder.\nextract: Extract the files in the current instance.")
   elseif text == "quit" then
     print("Goodbye! [Process Completed]")
+  elseif text == "loadfol" then
+    write("Enter the folder to load: ")
+    theCCP = ccp.loadFolder(read())
+  elseif text == "vardump" then
+    print(text)
+    for k,v in ipairs(dirs) do
+      print(k.."="..v)
+    end
+  elseif text == "rename" then
+    write("Enter the new name: ")
+    theCCP = ccp.rename(theCCP, read())
   else
     print("Unknown command. Type help for help.")
   end
+end
+else 
+  print("Load failed.")
 end
