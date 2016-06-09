@@ -1,2 +1,2 @@
-* linguist-language=Lua
+/^([^.]+)$/m linguist-language=Lua
 *.ccp linguist-language=JSON
