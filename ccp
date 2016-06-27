@@ -1,15 +1,6 @@
 --Enabled for verbose mode
 local _DEBUG = true
-
-local function inArray(array, str)
-  for _,v in pairs(array) do
-    if v == str then
-      return true
-    end
-  end
-  return false
-end
-
+--local function inArray(array, str) for _,v in pairs(array) do if v == str then return true end end return false end
 local function debugPrint(text) if _DEBUG then print(text) end end 
 local function isTable(t) return type(t) == "table" end
 local function select (n, ...) return arg[n] end
@@ -17,6 +8,7 @@ local function getFolder(table, ...) return getFolder(table[select(1, expand(arg
 
 --Uncomment to allow -v argument
 --if inArray(arg, "-v") then _DEBUG = true end
+
 function load(file)
   local ccp = fs.open(file, "r")
   local data = ccp.readAll()
@@ -80,17 +72,25 @@ end
 function loadFolder(folder, recurse)
   local table = {}
   recurse = recurse or false
-  table.name = fs.getName(folder)
-  table.data = {}
+  if not recurse then
+    table.name = fs.getName(folder)
+    table.data = {}
+    data = table.data
+  end
   for v,k in pairs(fs.list(folder)) do
     debugPrint("Testing "..k)
     if fs.isDir(folder..k) then
-      table["data"][k] = {}
+      data[k] = loadFolder(folder..k, true)
     else
       local kFile = fs.open(folder..k, "r")
-      table["data"][k] = kFile.readAll()
+      data[k] = kFile.readAll()
       kFile.close()
     end
+  end
+  if not recurse then
+    table.data = data
+  else
+    table = data
   end
   return table
 end
