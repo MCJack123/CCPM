@@ -1,13 +1,23 @@
-print "Checking database..."
-local database = http.get("http://cppconsole.bruienne.com/CCPM/database.txt")
+if not fs.isDir("/Programs") then
+  oldcolor = term.getTextColor()
+  term.setTextColor(colors.combine(colors.red, colors.black))
+  print("The Programs folder was not found (or it is not a directory)! The folder will be created automatically.")
+  term.setTextColor(oldcolor)
+  fs.makeDir("/Programs")
+  fs.makeDir("/Programs/CCPM_Temp")
+end
+print("Checking database...")
+database = http.get("http://cppconsole.bruienne.com/CCPM/database.txt")
 packID = 0
 while lastId = database.readLine() != "ids" do
-if lastId == arg[1] then found = true
-else found = false end
-packID = packID + 1
+  if lastId == arg[1] then found = true
+  else found = false end
+  packID = packID + 1
 end
 if found != true then error("Package " .. arg[1] .. " not found.") end
-print "Downloading package..."
+print("Downloading package...")
 package = http.get("http://cppconsole.bruienne.com/CCPM/packs/ids/" .. packID .. ".ccp")
-
-
+if not fs.isDir("/Programs/CCPM_Temp") then fs.makeDir("/Programs/CCPM_Temp") end
+packfile = fs.open("/Programs/CCPM_Temp/pack.ccp", "w")
+packfile.write(package.readAll())
+packfile.close()
