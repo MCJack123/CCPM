@@ -9,6 +9,29 @@ local function getFolder(table, ...) return getFolder(table[select(1, expand(arg
 --Uncomment to allow -v argument
 --if inArray(arg, "-v") then _DEBUG = true end
 
+
+--[[---------------------CCP Format--------------------------
+The CCP format is made up of these different identifiers.
+(CCP file) {
+* name = The name of the CCP file/package.
+* type = The type of package. Can be as follows in the table:
+  N|Identifier |Type
+  0|application|An application run by the user.
+  1|intprogram |A small console program (like the GNUtils)
+  2|api        |An API for any program.
+  3|apiboot    |An API that will be loaded at startup.
+  4|startup    |A program that is run at startup.
+  5|shell      |A shell program that will shutdown after quit
+  6|opersystem |A shell that will fully control the computer.
+  More may be added later on as needed.
+* mainexec = For programs, the main executable to be run.
+* data = The actual data in the file.
+More identifiers may be added in later versions as needed.
+---------------------------------------------------------]]--
+
+
+ccp_format = {"name", "type", "mainexec", "data"} --The definitions of identifiers
+
 function load(file)
   local ccp = fs.open(file, "r")
   local data = ccp.readAll()
@@ -62,9 +85,15 @@ function extract(table, folder, createFolder, recurse)
   end
 end
 
-function new(name)
+function new(name, type, mainexec)
+  if name == nil then
+    error("Name not given for new CCP")
+    return {}
+  end
   newccp = {}
   newccp["name"] = name
+  newccp["type"] = type
+  newccp["mainexec"] = mainexec
   newccp["data"] = {}
   return newccp
 end
