@@ -10,6 +10,7 @@ local function getFolder(table, ...) return getFolder(table[select(1, expand(arg
 --if inArray(arg, "-v") then _DEBUG = true end
 
 
+
 --[[---------------------CCP Format--------------------------
 The CCP format is made up of these different identifiers.
 (CCP file) {
@@ -24,13 +25,17 @@ The CCP format is made up of these different identifiers.
   5|shell      |A shell program that will shutdown after quit
   6|opersystem |A shell that will fully control the computer.
   More may be added later on as needed.
-* mainexec = For programs, the main executable to be run.
+* mainexec = The path of the main executable to be run/loaded
+  Format: "/path/to/application", make sure to have first /.
+* preinstall = The path of the script to run before install.
+  Format: "x/path/to/preinstall", x can be 't' or 'f' denotin
+  if the script will be copied to destination.
+* postinstall = The path of the script to run after install.
 * data = The actual data in the file.
 More identifiers may be added in later versions as needed.
 ---------------------------------------------------------]]--
 
 
-ccp_format = {"name", "type", "mainexec", "data"} --The definitions of identifiers
 
 function load(file)
   local ccp = fs.open(file, "r")
@@ -38,7 +43,7 @@ function load(file)
   ccp.close()
   return textutils.unserialize(data)
 end
-                                    
+
 function pack(name, table)
   local file = fs.open(name, "w")
   file.write(textutils.serialize(table))
@@ -94,6 +99,8 @@ function new(name, type, mainexec)
   newccp["name"] = name
   newccp["type"] = type
   newccp["mainexec"] = mainexec
+  newccp["preinstall"] = ""
+  newccp["postinstall"] = ""
   newccp["data"] = {}
   return newccp
 end
