@@ -51,13 +51,13 @@ function pack(name, table)
 end
 
 function add_folder(table, name, ...)
-  local folders = getFolder(table, expand(arg))
+  local folders = getFolder(table["data"], expand(arg))
   folders[name] = {}
   return folders
 end
 
 function edit_file(table, name, content, ...)
-  local folders = getFolder(table, expand[arg])
+  local folders = getFolder(table["data"], expand[arg])
   folders[name] = content
   return folders
 end
